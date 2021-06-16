@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,17 +8,21 @@ import {
   ScrollView,
   Image,
   Modal,
-  Platform,
+  LogBox,
+  PermissionsAndroid,
 } from 'react-native';
 
 // ========== Libraries ========== //
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
-import ImagePicker from 'react-native-image-crop-picker';
+// import ImagePicker from 'react-native-image-crop-picker';
 import LottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const AddProperty = ({navigation}) => {
+  const [isLoading, setIsLoading] = useState();
+
   // React Native Modal
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -32,10 +36,16 @@ const AddProperty = ({navigation}) => {
     {label: 'Basemenet', value: 'Basement'},
   ]);
 
-  const [frontImage, setFrontImage] = useState('image.path');
-  const [leftImage, setLeftImage] = useState('image.path');
-  const [rightImage, setRightImage] = useState('image.path');
-  const [oppositeImage, setOppositeImage] = useState('image.path');
+  const [frontImage, setFrontImage] = useState('');
+  const [leftImage, setLeftImage] = useState('');
+  const [rightImage, setRightImage] = useState('');
+  const [oppositeImage, setOppositeImage] = useState('');
+
+  const [leftImagePath, setLeftImagePath] = useState('');
+  const [rightImagePath, setRightImagePath] = useState('');
+  const [frontImagePath, setFrontImagePath] = useState('');
+  const [oppositeImagePath, setOppositeImagePath] = useState('');
+
   const [ownerName, setOwnerName] = useState('');
   const [ownerContact, setOwnerContact] = useState('');
   const [propertyAddress, setPropertyAddress] = useState('');
@@ -92,40 +102,87 @@ const AddProperty = ({navigation}) => {
       .then(function (result) {
         if (result.error == 1) {
           alert(result.msg);
+          selectImage();
           navigation.navigate('HomeScreen');
         } else {
           alert(result.msg);
         }
       })
       .catch(error => {
-        console.error(error);
+        if (error) {
+          console.error(error);
+        }
       });
   };
 
-  // Function to Select image from gallery
-  const selectImage = selectfor => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-      mediaType: 'photo',
-      compressImageQuality: 0.4,
-    }).then(image => {
-      console.log(image);
-      if (selectfor == 'front') {
-        setFrontImage(image.path);
+  // Gallery Permission
+  const requestGalleryPermission = async selectForImage => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Gizmmo Consultants Gallery Permission Required',
+          message: 'Gizmmo Consultants needs access to your camera ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        let options = {
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+          maxWidth: 300,
+          maxHeight: 400,
+          quality: 1,
+        };
+        launchImageLibrary(options, res => {
+          alert(res);
+          if (res.errorCode == 'permission') {
+            alert('Gallery Permission granted');
+            // return;
+          } else if (res.errorCode == 'others') {
+            alert(res.errorMessage);
+            return;
+          } else if (res.didCancel) {
+          } else {
+            let temp = {
+              name: res.fileName,
+              uri: res.uri,
+              type: res.type,
+            };
+
+            if (selectForImage == 'front') {
+              console.log(res);
+              setFrontImage(res.path);
+              setFrontImagePath(temp);
+            } else if (selectForImage == 'left') {
+              setLeftImage(res.path);
+              setLeftImagePath(temp);
+            } else if (selectForImage == 'right') {
+              setRightImage(res.path);
+              setRightImagePath(temp);
+            } else if (selectForImage == 'opposite') {
+              setOppositeImage(res.path);
+              setOppositeImagePath(temp);
+            }
+          }
+        });
+      } else {
+        console.log('Camera permission denied');
       }
-      if (selectfor == 'left') {
-        setLeftImage(image.path);
-      }
-      if (selectfor == 'right') {
-        setRightImage(image.path);
-      }
-      if (selectfor == 'opposite') {
-        setOppositeImage(image.path);
-      }
-    });
+    } catch (err) {
+      console.warn(err);
+    }
   };
+
+  useEffect(() => {
+    // LogBox.ignoreAllLogs();
+    LogBox.ignoreLogs(['Warning: ...']);
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }, []);
 
   return (
     <>
@@ -134,87 +191,175 @@ const AddProperty = ({navigation}) => {
           <Text style={styles.screenName}>Add New Property</Text>
 
           {/* ========== Front Image upload Section ========== */}
-          <Pressable
-            onPress={() => selectImage('front')}
-            style={styles.imgUploadContainer}>
-            <View style={styles.imgIconBox}>
-              <Image
-                source={{uri: frontImage}}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 5,
+          {frontImagePath === '' ? (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('front');
                 }}
-              />
-            </View>
-            <View>
-              <Text style={styles.imgBoxLabel}>Click here to </Text>
-              <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
-            </View>
-          </Pressable>
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Icons name="image-outline" size={25} color="#777" />
+                </View>
+                <View>
+                  <Text style={[styles.imgBoxLabel]}>Click here to </Text>
+                  <Text style={[styles.imgBoxLabel]}>Upload Front Image</Text>
+                </View>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('front');
+                }}
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Image
+                    source={{uri: frontImagePath}}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+                <Text style={[styles.imgBoxLabel, {flex: 1}]}>
+                  Front Image Uploaded
+                </Text>
+                <Icons name="checkbox-outline" size={25} color="green" />
+              </Pressable>
+            </>
+          )}
           {/* ========== Front Image upload Section ========== */}
 
           {/* ========== Left Image upload Section ========== */}
-          <Pressable
-            onPress={() => selectImage('left')}
-            style={styles.imgUploadContainer}>
-            <View style={styles.imgIconBox}>
-              <Image
-                source={{uri: leftImage}}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 5,
+          {leftImagePath === '' ? (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('left');
                 }}
-              />
-            </View>
-            <View>
-              <Text style={styles.imgBoxLabel}>Click here to </Text>
-              <Text style={styles.imgBoxLabel}>Upload Left Image</Text>
-            </View>
-          </Pressable>
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Icons name="image-outline" size={25} color="#777" />
+                </View>
+                <View>
+                  <Text style={styles.imgBoxLabel}>Click here to </Text>
+                  <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
+                </View>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('left');
+                }}
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Image
+                    source={{uri: leftImagePath}}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+                <Text style={[styles.imgBoxLabel, {flex: 1}]}>
+                  Left Image Uploaded
+                </Text>
+                <Icons name="checkbox-outline" size={25} color="green" />
+              </Pressable>
+            </>
+          )}
           {/* ========== Left Image upload Section ========== */}
 
           {/* ========== Right Image upload Section ========== */}
-          <Pressable
-            onPress={() => selectImage('right')}
-            style={styles.imgUploadContainer}>
-            <View style={styles.imgIconBox}>
-              <Image
-                source={{uri: rightImage}}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 5,
+          {rightImagePath === '' ? (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('right');
                 }}
-              />
-            </View>
-            <View>
-              <Text style={styles.imgBoxLabel}>Click here to </Text>
-              <Text style={styles.imgBoxLabel}>Upload Right Image</Text>
-            </View>
-          </Pressable>
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Icons name="image-outline" size={25} color="#777" />
+                </View>
+                <View>
+                  <Text style={styles.imgBoxLabel}>Click here to </Text>
+                  <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
+                </View>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('right');
+                }}
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Image
+                    source={{uri: rightImagePath}}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+                <Text style={[styles.imgBoxLabel, {flex: 1}]}>
+                  Right Image Uploaded
+                </Text>
+                <Icons name="checkbox-outline" size={25} color="green" />
+              </Pressable>
+            </>
+          )}
           {/* ========== Right Image upload Section ========== */}
 
           {/* ========== Opp Image upload Section ========== */}
-          <Pressable
-            onPress={() => selectImage('opposite')}
-            style={[styles.imgUploadContainer, {marginBottom: 50}]}>
-            <View style={styles.imgIconBox}>
-              <Image
-                source={{uri: oppositeImage}}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 5,
+          {oppositeImagePath === '' ? (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('opposite');
                 }}
-              />
-            </View>
-            <View>
-              <Text style={styles.imgBoxLabel}>Click here to </Text>
-              <Text style={styles.imgBoxLabel}>Upload Opposite Image</Text>
-            </View>
-          </Pressable>
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Icons name="image-outline" size={25} color="#777" />
+                </View>
+                <View>
+                  <Text style={styles.imgBoxLabel}>Click here to </Text>
+                  <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
+                </View>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => {
+                  requestGalleryPermission('opposite');
+                }}
+                style={styles.imgUploadContainer}>
+                <View style={styles.imgIconBox}>
+                  <Image
+                    source={{uri: oppositeImagePath}}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+                <Text style={[styles.imgBoxLabel, {flex: 1}]}>
+                  Opposite Side Image Uploaded
+                </Text>
+                <Icons name="checkbox-outline" size={25} color="green" />
+              </Pressable>
+            </>
+          )}
           {/* ========== Opp Image upload Section ========== */}
 
           {/* ========== Owner Name ========== */}
@@ -407,12 +552,11 @@ const AddProperty = ({navigation}) => {
 
           {/* ========== Upload Button ========== */}
           <Pressable onPress={uploadProperty} style={styles.uploadBtn}>
-            <Text style={styles.uploadBtnTxt}>UPLOAD</Text>
+            <Text style={styles.uploadBtnTxt}>UPLOAD PROPERTY DETAILS</Text>
           </Pressable>
           {/* ========== Upload Button ========== */}
         </View>
       </ScrollView>
-
       <Modal
         animationType="fade"
         transparent={true}
