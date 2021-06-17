@@ -85,20 +85,33 @@ const SettingsScreen = () => {
               borderRadius: 5,
               borderColor: '#c7c7c7c7',
               flexDirection: 'row',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
               alignItems: 'center',
-              paddingVertical: 20,
+              paddingVertical: 30,
               paddingHorizontal: 10,
               backgroundColor: '#fff',
             }}
             onPress={signOut}>
-            <Icons name="log-out-outline" size={25} color="#0077B6" />
+            <View
+              style={{
+                width: '300%',
+                height: '300%',
+                flex: 1,
+              }}>
+              <LottieView
+                source={require('../../assets/json/logout.json')}
+                autoPlay
+                loop
+              />
+            </View>
+
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
                 fontSize: 18,
                 color: '#000',
                 marginLeft: 20,
+                flex: 5,
               }}>
               Sign Out
             </Text>

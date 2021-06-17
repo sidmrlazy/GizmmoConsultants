@@ -82,9 +82,10 @@ const HistoryScreen = () => {
         <View style={styles.container}>
           <View style={styles.headerSection}>
             <TextInput
-              placeholder="Search"
+              placeholder="Search Properties"
               style={styles.search}
               autoCapitalize="words"
+              placeholderTextColor="#777"
             />
           </View>
 
@@ -313,6 +314,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: '#c7c7c7c7',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 16,
   },
   responseSection: {
     width: '100%',

@@ -40,7 +40,7 @@ const Navigation = ({navigation}) => {
           name="HistoryScreen"
           component={HistoryScreen}
           options={{
-            tabBarLabel: 'History',
+            tabBarLabel: 'View Properties',
             tabBarColor: '#90E0EF',
             tabBarIcon: ({color}) => (
               <Icons name="bookmark-outline" color={color} size={20} />
