@@ -183,6 +183,13 @@ const HistoryScreen = () => {
                 </View>
               </View>
 
+              <View style={styles.cardInnerRow}>
+                <View style={styles.cardDiv}>
+                  <Text style={styles.label}>Added on </Text>
+                  <Text style={styles.response}>Tarun Srivastava</Text>
+                </View>
+              </View>
+
               <Pressable
                 onPress={() => setModalVisible(true)}
                 style={styles.viewImgBtn}>
