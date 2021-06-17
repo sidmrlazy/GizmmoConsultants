@@ -15,6 +15,7 @@ import Icons from 'react-native-vector-icons/Ionicons';
 
 // ========== Screens ========== //
 import AddProperty from './AddProperty';
+import Download from './DownloadDocuments';
 
 const HomeScreen = ({navigation}) => {
   return (
@@ -26,6 +27,13 @@ const HomeScreen = ({navigation}) => {
             style={styles.tab}>
             <Icons name="business-outline" size={25} color="#0077B6" />
             <Text style={styles.tabTxt}>Add New Property</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate('Download')}
+            style={styles.tab}>
+            <Icons name="library-outline" size={25} color="#0077B6" />
+            <Text style={styles.tabTxt}>Download Documents</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -40,6 +48,7 @@ const HomeScreenHolder = () => {
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="AddProperty" component={AddProperty} />
+      <Stack.Screen name="Download" component={Download} />
     </Stack.Navigator>
   );
 };
@@ -48,7 +57,7 @@ export default HomeScreenHolder;
 
 const styles = StyleSheet.create({
   scrollView: {
-    paddingTop: 20,
+    paddingTop: 5,
     paddingBottom: 30,
     backgroundColor: '#fff',
   },
@@ -58,8 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: '#fff',
     paddingHorizontal: 10,
-    marginBottom: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   tab: {
     flexDirection: 'row',
@@ -72,6 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1.5,
     borderColor: '#e0e0e0',
+    marginTop: 10,
   },
   tabTxt: {
     fontFamily: 'OpenSans-Bold',

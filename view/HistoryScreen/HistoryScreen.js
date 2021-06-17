@@ -12,9 +12,10 @@ import {
 } from 'react-native';
 
 // ========== Libraries ========== //
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icons from 'react-native-vector-icons/Ionicons';
+import DropDownPicker from 'react-native-dropdown-picker';
+import * as Animatable from 'react-native-animatable';
 
 // ========== Images ========== //
 import demo1 from '../../assets/images/demo/demo-one.jpg';
@@ -24,8 +25,36 @@ import demo4 from '../../assets/images/demo/demo-four.jpg';
 
 const HistoryScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+
+  //  Status Modal Property Status DropDown
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Negotiated', value: 'Negotiated'},
+    {
+      label: 'Agreement To Lease Processed',
+      value: 'Agreement To Lease Processed',
+    },
+    {
+      label: 'SDR Done',
+      value: 'SDR Done',
+    },
+    {
+      label: 'Site Approved',
+      value: 'Site Approved',
+    },
+    {
+      label: 'Documentation Pending',
+      value: 'Documentation Pending',
+    },
+    {
+      label: 'Documentation Complete',
+      value: 'Documentation Complete',
+    },
+  ]);
 
   const api =
     'https://gizmmoalchemy.com/api/consultancy/consultancy.php?flag=view_property_new';
@@ -67,6 +96,24 @@ const HistoryScreen = () => {
                   <Text style={styles.ownerContact}>9876543210</Text>
                   <Text style={styles.city}>Lucknow</Text>
                   <Text style={styles.pincode}>226024</Text>
+
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Bold',
+                      fontSize: 16,
+                      color: 'green',
+                      marginTop: 15,
+                    }}>
+                    Status
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-SemiBold',
+                      fontSize: 20,
+                      color: '#000',
+                    }}>
+                    Negotiated
+                  </Text>
                 </View>
                 <Icons name="call" size={20} color="green" />
               </View>
@@ -138,13 +185,20 @@ const HistoryScreen = () => {
               <Pressable
                 onPress={() => setModalVisible(true)}
                 style={styles.viewImgBtn}>
-                <Text style={styles.viewImgBtnTxt}>View Images</Text>
+                <Text style={styles.viewImgBtnTxt}>View Property Images</Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => setStatusModalVisible(true)}
+                style={styles.updateStatusBtn}>
+                <Text style={styles.UpdateStatusBtnTxt}>Update Status</Text>
               </Pressable>
             </View>
           </View>
         </View>
       </ScrollView>
 
+      {/* Image Slider Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -178,6 +232,49 @@ const HistoryScreen = () => {
           </ScrollView>
         </View>
       </Modal>
+      {/* Image Slider Modal */}
+
+      {/* Update Status Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={statusModalVisible}
+        onRequestClose={() => {
+          setStatusModalVisible(!statusModalVisible);
+        }}>
+        <View style={styles.statusModalContainer}>
+          <Animatable.View animation="slideInUp" style={styles.statusModalCard}>
+            <View style={styles.statusModalHeadingRow}>
+              <Text style={styles.statusModalHeading}>
+                Update Status of property
+              </Text>
+              <Pressable
+                onPress={() => setStatusModalVisible(!statusModalVisible)}>
+                <Icons name="close-circle-outline" size={30} color="#fff" />
+              </Pressable>
+            </View>
+            <View style={styles.statusModalBottomHeading}>
+              <Text style={styles.statusModalHeadingTxt}>Status</Text>
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                dropDownDirection="AUTO"
+                style={styles.dropDownContainer}
+                dropDownContainerStyle={styles.dropDownList}
+                // placeholderStyle={{
+                //   fontFamily: 'OpenSans-Regular',
+                //   fontSize: 16,
+                // }}
+              />
+            </View>
+          </Animatable.View>
+        </View>
+      </Modal>
+      {/* Update Status Modal */}
     </>
   );
 };
@@ -305,6 +402,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#0077B6',
   },
+  updateStatusBtn: {
+    marginBottom: 10,
+    width: '100%',
+    borderWidth: 1.5,
+    borderColor: '#00B4D8',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 15,
+    marginTop: 10,
+  },
+  UpdateStatusBtnTxt: {
+    fontFamily: 'OpenSans-SemiBold',
+    fontSize: 18,
+    color: '#00B4D8',
+  },
   modalContainer: {
     backgroundColor: 'rgba(52, 52, 52, 0.8)',
     flex: 1,
@@ -327,5 +440,54 @@ const styles = StyleSheet.create({
     width: 400,
     height: 300,
     borderRadius: 5,
+  },
+  statusModalContainer: {
+    backgroundColor: 'rgba(52, 52, 52, 0.3)',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  statusModalCard: {
+    width: '100%',
+    backgroundColor: '#0077B6',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: 20,
+    paddingBottom: 40,
+    height: 500,
+  },
+  statusModalHeadingRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 30,
+    marginTop: 10,
+  },
+  statusModalHeading: {
+    fontFamily: 'OpenSans-SemiBold',
+    fontSize: 20,
+    flex: 1,
+    color: '#fff',
+  },
+  statusModalBottomHeading: {
+    marginTop: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  statusModalHeadingTxt: {
+    fontFamily: 'OpenSans-SemiBold',
+    fontSize: 18,
+    marginBottom: 10,
+    color: '#fff',
+  },
+  dropDownContainer: {
+    borderWidth: 0.5,
+    borderColor: '#c7c7c7c7',
+  },
+  dropDownList: {
+    borderWidth: 0.5,
+    borderColor: '#c7c7c7c7',
   },
 });
