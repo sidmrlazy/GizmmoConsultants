@@ -279,6 +279,27 @@ const HistoryScreen = () => {
                 // }}
               />
             </View>
+
+            <View
+              style={{
+                width: '100%',
+                marginTop: 20,
+                marginBottom: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: 20,
+                borderRadius: 5,
+                backgroundColor: '#03045E',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Bold',
+                  fontSize: 18,
+                  color: '#fff',
+                }}>
+                UPDATE STATUS
+              </Text>
+            </View>
           </Animatable.View>
         </View>
       </Modal>
