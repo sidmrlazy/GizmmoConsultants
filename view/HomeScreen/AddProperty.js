@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,21 +8,17 @@ import {
   ScrollView,
   Image,
   Modal,
-  LogBox,
-  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 
 // ========== Libraries ========== //
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
-// import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import LottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
-import {launchImageLibrary} from 'react-native-image-picker';
 
 const AddProperty = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState();
-
   // React Native Modal
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -36,58 +32,59 @@ const AddProperty = ({navigation}) => {
     {label: 'Basemenet', value: 'Basement'},
   ]);
 
-  const [frontImage, setFrontImage] = useState('');
-  const [leftImage, setLeftImage] = useState('');
-  const [rightImage, setRightImage] = useState('');
-  const [oppositeImage, setOppositeImage] = useState('');
+  // const [frontImage, setFrontImage] = useState('image.path');
+  // const [leftImage, setLeftImage] = useState('image.path');
+  // const [rightImage, setRightImage] = useState('image.path');
+  // const [oppositeImage, setOppositeImage] = useState('image.path');
 
-  const [leftImagePath, setLeftImagePath] = useState('');
-  const [rightImagePath, setRightImagePath] = useState('');
-  const [frontImagePath, setFrontImagePath] = useState('');
-  const [oppositeImagePath, setOppositeImagePath] = useState('');
+  // const [frontImagePath, setFrontImagePath] = useState();
+  // const [leftImagePath, setLeftImagePath] = useState();
+  // const [rightImagePath, setRightImagePath] = useState();
+  // const [oppositeImagePath, setOppositeImagePath] = useState();
 
   const [ownerName, setOwnerName] = useState('');
-  const [ownerContact, setOwnerContact] = useState('');
-  const [propertyAddress, setPropertyAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [pincode, setPincode] = useState('');
-  const [carpetArea, setCarpetArea] = useState('');
-  const [frontage, setFrontage] = useState('');
-  const [price, setPrice] = useState('');
-  const [floor, setFloor] = useState('');
-  const [lat, setLat] = useState('');
-  const [long, setLong] = useState('');
-  const [brokerName, setBrokerName] = useState('');
-  const [brokerContact, setBrokerContact] = useState('');
+  // const [ownerContact, setOwnerContact] = useState('');
+  // const [propertyAddress, setPropertyAddress] = useState('');
+  // const [city, setCity] = useState('');
+  // const [state, setState] = useState('');
+  // const [pincode, setPincode] = useState('');
+  // const [carpetArea, setCarpetArea] = useState('');
+  // const [frontage, setFrontage] = useState('');
+  // const [price, setPrice] = useState('');
+  // const [floor, setFloor] = useState('');
+  // const [lat, setLat] = useState('');
+  // const [long, setLong] = useState('');
+  // const [brokerName, setBrokerName] = useState('');
+  // const [brokerContact, setBrokerContact] = useState('');
 
   const uploadPropertyApi =
-    'https://gizmmoalchemy.com/api/consultancy/consultancy.php?flag=upload_property';
+    'https://gizmmoalchemy.com/api/consultancy/consultancy_property.php';
 
   // Function to upload property details
   const uploadProperty = async () => {
     let uploadBy = await AsyncStorage.getItem('user_id');
     console.log(uploadBy);
     const data = new FormData();
-    data.append('front_image', frontImage);
-    data.append('left_image', leftImage);
-    data.append('right_image', rightImage);
-    data.append('opposite_image', oppositeImage);
+
+    // data.append('front_image', frontImage);
+    // data.append('left_image', leftImage);
+    // data.append('right_image', rightImage);
+    // data.append('opposite_image', oppositeImage);
     data.append('upload_by', uploadBy);
-    data.append('owner_name', ownerName);
-    data.append('owner_contact_name', ownerContact);
-    data.append('address', propertyAddress);
-    data.append('city', city);
-    data.append('state', state);
-    data.append('pincode', pincode);
-    data.append('carpet_area', carpetArea);
-    data.append('frontage', frontage);
-    data.append('floor', floor);
-    data.append('price', price);
-    data.append('latitude', lat);
-    data.append('longitude', long);
-    data.append('broker_name', brokerName);
-    data.append('broker_contact_name', brokerContact);
+    // data.append('owner_name', ownerName);
+    // data.append('owner_contact_name', ownerContact);
+    // data.append('address', propertyAddress);
+    // data.append('city', city);
+    // data.append('state', state);
+    // data.append('pincode', pincode);
+    // data.append('carpet_area', carpetArea);
+    // data.append('frontage', frontage);
+    // data.append('floor', floor);
+    // data.append('price', price);
+    // data.append('latitude', lat);
+    // data.append('longitude', long);
+    // data.append('broker_name', brokerName);
+    // data.append('broker_contact_name', brokerContact);
     fetch(uploadPropertyApi, {
       method: 'POST',
       headers: {
@@ -102,87 +99,44 @@ const AddProperty = ({navigation}) => {
       .then(function (result) {
         if (result.error == 1) {
           alert(result.msg);
-          selectImage();
           navigation.navigate('HomeScreen');
         } else {
           alert(result.msg);
         }
       })
       .catch(error => {
-        if (error) {
-          console.error(error);
-        }
+        console.error(error);
       });
   };
 
-  // Gallery Permission
-  const requestGalleryPermission = async selectForImage => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Gizmmo Consultants Gallery Permission Required',
-          message: 'Gizmmo Consultants needs access to your camera ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        let options = {
-          storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-          maxWidth: 300,
-          maxHeight: 400,
-          quality: 1,
-        };
-        launchImageLibrary(options, res => {
-          alert(res);
-          if (res.errorCode == 'permission') {
-            alert('Gallery Permission granted');
-            // return;
-          } else if (res.errorCode == 'others') {
-            alert(res.errorMessage);
-            return;
-          } else if (res.didCancel) {
-          } else {
-            let temp = {
-              name: res.fileName,
-              uri: res.uri,
-              type: res.type,
-            };
-
-            if (selectForImage == 'front') {
-              console.log(res);
-              setFrontImage(res.path);
-              setFrontImagePath(temp);
-            } else if (selectForImage == 'left') {
-              setLeftImage(res.path);
-              setLeftImagePath(temp);
-            } else if (selectForImage == 'right') {
-              setRightImage(res.path);
-              setRightImagePath(temp);
-            } else if (selectForImage == 'opposite') {
-              setOppositeImage(res.path);
-              setOppositeImagePath(temp);
-            }
-          }
-        });
-      } else {
-        console.log('Camera permission denied');
+  // Function to Select image from gallery
+  const selectImage = selectfor => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: false,
+      mediaType: 'photo',
+      compressImageQuality: 0.4,
+    }).then(image => {
+      console.log(image);
+      if (selectfor == 'front') {
+        setFrontImage(image.path);
+        // setFrontImagePath(image.path);
       }
-    } catch (err) {
-      console.warn(err);
-    }
+      if (selectfor == 'left') {
+        setLeftImage(image.path);
+        // setLeftImagePath(image.path);
+      }
+      if (selectfor == 'right') {
+        setRightImage(image.path);
+        // setRightImagePath(image.path);
+      }
+      if (selectfor == 'opposite') {
+        setOppositeImage(image.path);
+        // setOppositeImagePath(image.path);
+      }
+    });
   };
-
-  useEffect(() => {
-    // LogBox.ignoreAllLogs();
-    LogBox.ignoreLogs(['Warning: ...']);
-    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-  }, []);
 
   return (
     <>
@@ -191,11 +145,11 @@ const AddProperty = ({navigation}) => {
           <Text style={styles.screenName}>Add New Property</Text>
 
           {/* ========== Front Image upload Section ========== */}
-          {frontImagePath === '' ? (
+          {/* {frontImage === '' ? (
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('front');
+                  selectImage('front');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
@@ -211,12 +165,12 @@ const AddProperty = ({navigation}) => {
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('front');
+                  selectImage('front');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
                   <Image
-                    source={{uri: frontImagePath}}
+                    source={{uri: frontImage}}
                     style={{
                       width: 100,
                       height: 100,
@@ -230,15 +184,15 @@ const AddProperty = ({navigation}) => {
                 <Icons name="checkbox-outline" size={25} color="green" />
               </Pressable>
             </>
-          )}
+          )} */}
           {/* ========== Front Image upload Section ========== */}
 
           {/* ========== Left Image upload Section ========== */}
-          {leftImagePath === '' ? (
+          {/* {leftImage === '' ? (
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('left');
+                  selectImage('left');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
@@ -254,12 +208,12 @@ const AddProperty = ({navigation}) => {
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('left');
+                  selectImage('left');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
                   <Image
-                    source={{uri: leftImagePath}}
+                    source={{uri: leftImage}}
                     style={{
                       width: 100,
                       height: 100,
@@ -273,15 +227,15 @@ const AddProperty = ({navigation}) => {
                 <Icons name="checkbox-outline" size={25} color="green" />
               </Pressable>
             </>
-          )}
+          )} */}
           {/* ========== Left Image upload Section ========== */}
 
           {/* ========== Right Image upload Section ========== */}
-          {rightImagePath === '' ? (
+          {/* {rightImage === '' ? (
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('right');
+                  selectImage('right');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
@@ -297,12 +251,12 @@ const AddProperty = ({navigation}) => {
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('right');
+                  selectImage('right');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
                   <Image
-                    source={{uri: rightImagePath}}
+                    source={{uri: rightImage}}
                     style={{
                       width: 100,
                       height: 100,
@@ -316,15 +270,15 @@ const AddProperty = ({navigation}) => {
                 <Icons name="checkbox-outline" size={25} color="green" />
               </Pressable>
             </>
-          )}
+          )} */}
           {/* ========== Right Image upload Section ========== */}
 
           {/* ========== Opp Image upload Section ========== */}
-          {oppositeImagePath === '' ? (
+          {/* {oppositeImage === '' ? (
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('opposite');
+                  selectImage('opposite');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
@@ -340,12 +294,12 @@ const AddProperty = ({navigation}) => {
             <>
               <Pressable
                 onPress={() => {
-                  requestGalleryPermission('opposite');
+                  selectImage('opposite');
                 }}
                 style={styles.imgUploadContainer}>
                 <View style={styles.imgIconBox}>
                   <Image
-                    source={{uri: oppositeImagePath}}
+                    source={{uri: oppositeImage}}
                     style={{
                       width: 100,
                       height: 100,
@@ -359,7 +313,7 @@ const AddProperty = ({navigation}) => {
                 <Icons name="checkbox-outline" size={25} color="green" />
               </Pressable>
             </>
-          )}
+          )} */}
           {/* ========== Opp Image upload Section ========== */}
 
           {/* ========== Owner Name ========== */}
@@ -376,7 +330,7 @@ const AddProperty = ({navigation}) => {
           {/* ========== Owner Name ========== */}
 
           {/* ========== Owner Contact Number ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Owner Contact Number</Text>
             <TextInput
               placeholder=""
@@ -385,11 +339,11 @@ const AddProperty = ({navigation}) => {
               value={ownerContact}
               onChangeText={setOwnerContact}
             />
-          </View>
+          </View> */}
           {/* ========== Owner Contact Number ========== */}
 
           {/* ========== Address ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Property Address</Text>
             <TextInput
               placeholder=""
@@ -400,11 +354,11 @@ const AddProperty = ({navigation}) => {
               value={propertyAddress}
               onChangeText={setPropertyAddress}
             />
-          </View>
+          </View> */}
           {/* ========== Address ========== */}
 
           {/* ========== City ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>City</Text>
             <TextInput
               placeholder=""
@@ -413,11 +367,11 @@ const AddProperty = ({navigation}) => {
               value={city}
               onChangeText={setCity}
             />
-          </View>
+          </View> */}
           {/* ========== City ========== */}
 
           {/* ========== State ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>State</Text>
             <TextInput
               placeholder=""
@@ -426,11 +380,11 @@ const AddProperty = ({navigation}) => {
               value={state}
               onChangeText={setState}
             />
-          </View>
+          </View> */}
           {/* ========== State ========== */}
 
           {/* ========== Pincode ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Pincode</Text>
             <TextInput
               placeholder=""
@@ -439,11 +393,11 @@ const AddProperty = ({navigation}) => {
               value={pincode}
               onChangeText={setPincode}
             />
-          </View>
+          </View> */}
           {/* ========== Pincode ========== */}
 
           {/* ========== Carpet Area ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Total Carpet Area (Offered)</Text>
             <TextInput
               placeholder="in Square Feet"
@@ -452,11 +406,11 @@ const AddProperty = ({navigation}) => {
               value={carpetArea}
               onChangeText={setCarpetArea}
             />
-          </View>
+          </View> */}
           {/* ========== Carpet Area ========== */}
 
           {/* ========== Frontage ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Frontage</Text>
             <TextInput
               placeholder="in Feet"
@@ -465,11 +419,11 @@ const AddProperty = ({navigation}) => {
               value={frontage}
               onChangeText={setFrontage}
             />
-          </View>
+          </View> */}
           {/* ========== Frontage ========== */}
 
           {/* ========== Floor ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Floor Offered</Text>
             <DropDownPicker
               open={open}
@@ -482,11 +436,11 @@ const AddProperty = ({navigation}) => {
               dropDownContainerStyle={styles.dropDownContainer}
               onChangeValue={setFloor}
             />
-          </View>
+          </View> */}
           {/* ========== Floor ========== */}
 
           {/* ========== Price ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Asking Price</Text>
             <TextInput
               placeholder="in Rs"
@@ -495,11 +449,11 @@ const AddProperty = ({navigation}) => {
               value={price}
               onChangeText={setPrice}
             />
-          </View>
+          </View> */}
           {/* ========== Price ========== */}
 
           {/* ========== Lat ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Latitude</Text>
             <TextInput
               placeholder=""
@@ -508,11 +462,11 @@ const AddProperty = ({navigation}) => {
               value={lat}
               onChangeText={setLat}
             />
-          </View>
+          </View> */}
           {/* ========== Lat ========== */}
 
           {/* ========== Long ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Longitude</Text>
             <TextInput
               placeholder=""
@@ -521,11 +475,11 @@ const AddProperty = ({navigation}) => {
               value={long}
               onChangeText={setLong}
             />
-          </View>
+          </View> */}
           {/* ========== Long ========== */}
 
           {/* ========== Broker Name ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Broker Name</Text>
             <TextInput
               placeholder="(if any)"
@@ -534,11 +488,11 @@ const AddProperty = ({navigation}) => {
               value={brokerName}
               onChangeText={setBrokerName}
             />
-          </View>
+          </View> */}
           {/* ========== Broker Name ========== */}
 
           {/* ========== Broker Contact ========== */}
-          <View style={styles.formGroup}>
+          {/* <View style={styles.formGroup}>
             <Text style={styles.label}>Broker Contact Number</Text>
             <TextInput
               placeholder=""
@@ -547,16 +501,17 @@ const AddProperty = ({navigation}) => {
               value={brokerContact}
               onChangeText={setBrokerContact}
             />
-          </View>
+          </View> */}
           {/* ========== Broker Contact ========== */}
 
           {/* ========== Upload Button ========== */}
           <Pressable onPress={uploadProperty} style={styles.uploadBtn}>
-            <Text style={styles.uploadBtnTxt}>UPLOAD PROPERTY DETAILS</Text>
+            <Text style={styles.uploadBtnTxt}>UPLOAD</Text>
           </Pressable>
           {/* ========== Upload Button ========== */}
         </View>
       </ScrollView>
+
       <Modal
         animationType="fade"
         transparent={true}
