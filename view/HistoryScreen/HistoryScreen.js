@@ -82,7 +82,7 @@ const HistoryScreen = () => {
         <View style={styles.container}>
           <View style={styles.headerSection}>
             <TextInput
-              placeholder="Search Properties"
+              placeholder="Search Properties by Owner Name, Owner Contact, Broker Name, Broker Contact or Pincode"
               style={styles.search}
               autoCapitalize="words"
               placeholderTextColor="#777"
@@ -212,7 +212,6 @@ const HistoryScreen = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.modalContainer}>
