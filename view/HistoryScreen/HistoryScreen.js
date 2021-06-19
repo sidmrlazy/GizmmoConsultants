@@ -143,7 +143,15 @@ const HistoryScreen = () => {
                 </View>
               </View>
 
-              <View style={styles.cardInnerRow}>
+              <View
+                style={[
+                  styles.cardInnerRow,
+                  {
+                    backgroundColor: '#e7e7e7e7',
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  },
+                ]}>
                 <View style={styles.cardDiv}>
                   <Text style={styles.label}>Carpet Area</Text>
                   <Text style={styles.response}>3000 Sqft</Text>
@@ -155,7 +163,15 @@ const HistoryScreen = () => {
                 </View>
               </View>
 
-              <View style={styles.cardInnerRow}>
+              <View
+                style={[
+                  styles.cardInnerRow,
+                  {
+                    backgroundColor: '#e7e7e7e7',
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  },
+                ]}>
                 <View style={styles.cardDiv}>
                   <Text style={styles.label}>Asking Price</Text>
                   <Text style={styles.response}>Rs 50</Text>
@@ -194,7 +210,12 @@ const HistoryScreen = () => {
               <View style={styles.cardInnerRow}>
                 <View style={styles.cardDiv}>
                   <Text style={styles.label}>Added on </Text>
-                  <Text style={styles.response}>Tarun Srivastava</Text>
+                  <Text style={styles.response}>21 June 2021</Text>
+                </View>
+
+                <View style={styles.cardDiv}>
+                  <Text style={styles.label}>Brokerage </Text>
+                  <Text style={styles.response}>4 Months</Text>
                 </View>
               </View>
 
@@ -416,7 +437,7 @@ const styles = StyleSheet.create({
   },
   response: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 20,
+    fontSize: 18,
   },
   pincode: {
     fontFamily: 'OpenSans-Bold',
