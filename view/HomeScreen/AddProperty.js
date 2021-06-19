@@ -18,7 +18,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 // import ImagePicker from 'react-native-image-crop-picker';
 import LottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const AddProperty = ({navigation}) => {
   const [isLoading, setIsLoading] = useState();
@@ -136,17 +136,12 @@ const AddProperty = ({navigation}) => {
             skipBackup: true,
             path: 'images',
           },
-          maxWidth: 600,
-          maxHeight: 600,
-          quality: 1,
-          videoQuality: 'medium',
-          durationLimit: 30,
+          maxWidth: 400,
+          maxHeight: 400,
           includeBase64: true,
         };
         launchImageLibrary(options, res => {
-          2;
           if (res) {
-            // alert(JSON.stringify(res));
             if (res.errorCode == 'permission') {
               alert('Gallery Permission granted');
               // return;
@@ -182,7 +177,6 @@ const AddProperty = ({navigation}) => {
   };
 
   useEffect(() => {
-    // LogBox.ignoreAllLogs();
     LogBox.ignoreLogs(['Warning: ...']);
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);

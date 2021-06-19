@@ -9,6 +9,8 @@ import {
   Modal,
   Image,
   FlatList,
+  ActivityIndicator,
+  LogBox,
 } from 'react-native';
 
 // ========== Libraries ========== //
@@ -67,9 +69,12 @@ const HistoryScreen = () => {
 
   const status =
     'https://gizmmoalchemy.com/api/consultancy/consultancy.php?flag=property_status';
+  const search =
+    'https://gizmmoalchemy.com/api/consultancy/consultancy.php?flag=search_property';
 
   // ======= Fetch Main Category ========== //
   const getDetails = async () => {
+    setLoading(true);
     let uploadBy = await AsyncStorage.getItem('user_id');
     return fetch(api, {
       method: 'POST',
@@ -115,155 +120,220 @@ const HistoryScreen = () => {
       .finally(() => setStatusModalVisible(false));
   };
 
+  //========Search Property=========//
+  const searchProperty = async searchkey => {
+    let uploadBy = await AsyncStorage.getItem('user_id');
+    setLoading(true);
+    return fetch(search, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        upload_by: uploadBy,
+        searchkey: searchkey,
+      }),
+    })
+      .then(response => response.json())
+      .then(json => {
+        // console.log(json);
+        setData(json.Property);
+      })
+      .catch(error => {
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
+  };
+
   useEffect(() => {
     getDetails();
+    LogBox.ignoreLogs(['Warning: ...']);
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
 
   return (
     <>
-      <View style={styles.scrollView}>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
-          <FlatList
-            data={data}
-            ListHeaderComponent={() => (
-              <View style={styles.headerSection}>
-                <TextInput
-                  placeholder="Search Properties"
-                  style={styles.search}
-                  autoCapitalize="words"
-                  placeholderTextColor="#777"
+          <View style={styles.headerSection}>
+            <TextInput
+              placeholder="Search Properties"
+              style={styles.search}
+              autoCapitalize="words"
+              placeholderTextColor="#777"
+              onChangeText={text => searchProperty(text)}
+            />
+          </View>
+          {isLoading ? (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: '50%',
+                paddingHorizontal: '50%',
+              }}>
+              <ActivityIndicator
+                animating={true}
+                color="#000"
+                size="large"
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
+            </View>
+          ) : (
+            <>
+              {data ? (
+                <FlatList
+                  data={data}
+                  style={{width: '100%'}}
+                  keyExtractor={({property_id}, index) => property_id}
+                  renderItem={({item}) => (
+                    <View style={styles.responseSection}>
+                      <View style={styles.card}>
+                        <View style={styles.headingRow}>
+                          <View style={{flex: 1}}>
+                            <Text style={styles.ownerName}>
+                              {item.owner_name}
+                            </Text>
+                            <Text style={styles.ownerContact}>
+                              {item.owner_contact_number}
+                            </Text>
+                            <Text style={styles.city}>{item.city}</Text>
+                            <Text style={styles.pincode}>{item.pincode}</Text>
+
+                            <Text
+                              style={{
+                                fontFamily: 'OpenSans-Bold',
+                                fontSize: 16,
+                                color: 'green',
+                                marginTop: 15,
+                              }}>
+                              Status
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: 'OpenSans-SemiBold',
+                                fontSize: 20,
+                                color: '#000',
+                              }}>
+                              Negotiated
+                            </Text>
+                          </View>
+                          <Icons name="call" size={20} color="green" />
+                        </View>
+
+                        <Text style={styles.cardSection}>Property Details</Text>
+
+                        <View style={styles.cardInnerRow}>
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Address</Text>
+                            <Text style={styles.response}>{item.address}</Text>
+                          </View>
+
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Floor Offered</Text>
+                            <Text style={styles.response}>Ground Floor</Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.cardInnerRow}>
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Carpet Area</Text>
+                            <Text style={styles.response}>
+                              {item.carpet_area} Sqft
+                            </Text>
+                          </View>
+
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Frontage</Text>
+                            <Text style={styles.response}>
+                              {item.frontage} Sqft
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.cardInnerRow}>
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Asking Price</Text>
+                            <Text style={styles.response}>Rs {item.price}</Text>
+                          </View>
+
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>
+                              Monthly Asking Price
+                            </Text>
+                            <Text style={styles.response}>Rs {item.price}</Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.cardInnerRow}>
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Latitude</Text>
+                            <Text style={styles.response}>{item.latitude}</Text>
+                          </View>
+
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Longitude</Text>
+                            <Text style={styles.response}>
+                              {item.longitude}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.cardInnerRow}>
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Broker Details</Text>
+                            <Text style={styles.response}>
+                              {item.broker_name}
+                            </Text>
+                          </View>
+
+                          <View style={styles.cardDiv}>
+                            <Text style={styles.label}>Broker Contact</Text>
+                            <Text style={styles.response}>
+                              {item.broker_contact_name}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <Pressable
+                          onPress={() => {
+                            setFrontImage(item.front_image);
+                            setRightImage(item.right_image);
+                            setLeftImage(item.left_image);
+                            setOppositeImage(item.opposite_image);
+                            setModalVisible(true);
+                          }}
+                          style={styles.viewImgBtn}>
+                          <Text style={styles.viewImgBtnTxt}>
+                            View Property Images
+                          </Text>
+                        </Pressable>
+
+                        <Pressable
+                          onPress={() => {
+                            setPropertyId(item.property_id);
+                            setStatusModalVisible(true);
+                          }}
+                          style={styles.updateStatusBtn}>
+                          <Text style={styles.UpdateStatusBtnTxt}>
+                            Update Status
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  )}
                 />
-              </View>
-            )}
-            style={{width: '100%'}}
-            keyExtractor={({property_id}, index) => property_id}
-            renderItem={({item}) => (
-              <View style={styles.responseSection}>
-                <View style={styles.card}>
-                  <View style={styles.headingRow}>
-                    <View style={{flex: 1}}>
-                      <Text style={styles.ownerName}>{item.owner_name}</Text>
-                      <Text style={styles.ownerContact}>
-                        {item.owner_contact_number}
-                      </Text>
-                      <Text style={styles.city}>{item.city}</Text>
-                      <Text style={styles.pincode}>{item.pincode}</Text>
-
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Bold',
-                          fontSize: 16,
-                          color: 'green',
-                          marginTop: 15,
-                        }}>
-                        Status
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-SemiBold',
-                          fontSize: 20,
-                          color: '#000',
-                        }}>
-                        Negotiated
-                      </Text>
-                    </View>
-                    <Icons name="call" size={20} color="green" />
-                  </View>
-
-                  <Text style={styles.cardSection}>Property Details</Text>
-
-                  <View style={styles.cardInnerRow}>
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Address</Text>
-                      <Text style={styles.response}>{item.address}</Text>
-                    </View>
-
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Floor Offered</Text>
-                      <Text style={styles.response}>Ground Floor</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.cardInnerRow}>
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Carpet Area</Text>
-                      <Text style={styles.response}>
-                        {item.carpet_area} Sqft
-                      </Text>
-                    </View>
-
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Frontage</Text>
-                      <Text style={styles.response}>{item.frontage} Sqft</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.cardInnerRow}>
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Asking Price</Text>
-                      <Text style={styles.response}>Rs {item.price}</Text>
-                    </View>
-
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Monthly Asking Price</Text>
-                      <Text style={styles.response}>Rs {item.price}</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.cardInnerRow}>
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Latitude</Text>
-                      <Text style={styles.response}>{item.latitude}</Text>
-                    </View>
-
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Longitude</Text>
-                      <Text style={styles.response}>{item.longitude}</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.cardInnerRow}>
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Broker Details</Text>
-                      <Text style={styles.response}>{item.broker_name}</Text>
-                    </View>
-
-                    <View style={styles.cardDiv}>
-                      <Text style={styles.label}>Broker Contact</Text>
-                      <Text style={styles.response}>
-                        {item.broker_contact_name}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <Pressable
-                    onPress={() => {
-                      setFrontImage(item.front_image);
-                      setRightImage(item.right_image);
-                      setLeftImage(item.left_image);
-                      setOppositeImage(item.opposite_image);
-                      setModalVisible(true);
-                    }}
-                    style={styles.viewImgBtn}>
-                    <Text style={styles.viewImgBtnTxt}>
-                      View Property Images
-                    </Text>
-                  </Pressable>
-
-                  <Pressable
-                    onPress={() => {
-                      setPropertyId(item.property_id);
-                      setStatusModalVisible(true);
-                    }}
-                    style={styles.updateStatusBtn}>
-                    <Text style={styles.UpdateStatusBtnTxt}>Update Status</Text>
-                  </Pressable>
-                </View>
-              </View>
-            )}
-          />
+              ) : (
+                <Text>No data Found!</Text>
+              )}
+            </>
+          )}
         </View>
-      </View>
+      </ScrollView>
 
       {/* Image Slider Modal */}
       <Modal
@@ -370,7 +440,7 @@ export default HistoryScreenHolder;
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: '#fff',
-    flex: 1,
+    // flex: 1,
   },
   container: {
     flex: 1,
@@ -391,6 +461,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#c7c7c7c7',
     fontFamily: 'OpenSans-Regular',
     fontSize: 16,
+    color: '#000',
   },
   responseSection: {
     width: '100%',
