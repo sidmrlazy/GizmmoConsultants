@@ -10,6 +10,7 @@ import {
   Modal,
   LogBox,
   PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 
 // ========== Libraries ========== //
@@ -21,7 +22,7 @@ import Icons from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 const AddProperty = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setLoading] = useState(false);
 
   // React Native Modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -88,6 +89,7 @@ const AddProperty = ({navigation}) => {
     data.append('broker_contact_name', brokerContact);
     // console.log(data);
     // return;
+    setLoading(true);
     fetch(
       'https://gizmmoalchemy.com/api/consultancy/consultancy_property.php',
       {
@@ -114,7 +116,8 @@ const AddProperty = ({navigation}) => {
         if (error) {
           console.error(error);
         }
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   // Gallery Permission
@@ -548,9 +551,15 @@ const AddProperty = ({navigation}) => {
           {/* ========== Broker Contact ========== */}
 
           {/* ========== Upload Button ========== */}
-          <Pressable onPress={uploadProperty} style={styles.uploadBtn}>
-            <Text style={styles.uploadBtnTxt}>UPLOAD PROPERTY DETAILS</Text>
-          </Pressable>
+          {isLoading ? (
+            <View style={styles.uploadBtn}>
+              <ActivityIndicator animating={true} color="#fff" size="large" />
+            </View>
+          ) : (
+            <Pressable onPress={uploadProperty} style={styles.uploadBtn}>
+              <Text style={styles.uploadBtnTxt}>UPLOAD PROPERTY DETAILS</Text>
+            </Pressable>
+          )}
           {/* ========== Upload Button ========== */}
         </View>
       </ScrollView>
