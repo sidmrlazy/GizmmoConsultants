@@ -21,10 +21,10 @@ import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ========== Images ========== //
-import demo1 from '../../assets/images/demo/demo-one.jpg';
-import demo2 from '../../assets/images/demo/demo-two.jpg';
-import demo3 from '../../assets/images/demo/demo-three.jpg';
-import demo4 from '../../assets/images/demo/demo-four.jpg';
+// import demo1 from '../../assets/images/demo/demo-one.jpg';
+// import demo2 from '../../assets/images/demo/demo-two.jpg';
+// import demo3 from '../../assets/images/demo/demo-three.jpg';
+// import demo4 from '../../assets/images/demo/demo-four.jpg';
 
 const HistoryScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -294,7 +294,7 @@ const HistoryScreen = () => {
                           <View style={styles.cardDiv}>
                             <Text style={styles.label}>Broker Contact</Text>
                             <Text style={styles.response}>
-                              {item.broker_contact_name}
+                              {item.broker_contact_number}
                             </Text>
                           </View>
                         </View>
@@ -349,7 +349,6 @@ const HistoryScreen = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.modalContainer}>

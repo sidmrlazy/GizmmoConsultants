@@ -16,7 +16,6 @@ import {
 // ========== Libraries ========== //
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
-// import ImagePicker from 'react-native-image-crop-picker';
 import LottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -139,8 +138,8 @@ const AddProperty = ({navigation}) => {
             skipBackup: true,
             path: 'images',
           },
-          maxWidth: 400,
-          maxHeight: 400,
+          maxWidth: 700,
+          maxHeight: 700,
           includeBase64: true,
         };
         launchImageLibrary(options, res => {
@@ -154,7 +153,6 @@ const AddProperty = ({navigation}) => {
             } else if (res.didCancel) {
             } else {
               let temp = {name: res.fileName, uri: res.uri, type: res.type};
-              console.log(temp);
               if (selectForImage == 'front') {
                 setFrontImage(temp);
                 setFrontImagePath(res.uri);
