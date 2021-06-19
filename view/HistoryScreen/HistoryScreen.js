@@ -111,7 +111,7 @@ const HistoryScreen = () => {
     })
       .then(response => response.json())
       .then(json => {
-        // console.log(json);
+        alert(json.msg);
         getDetails();
       })
       .catch(error => {
