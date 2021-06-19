@@ -15,14 +15,11 @@ import {
 // ========== Libraries ========== //
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
-// import ImagePicker from 'react-native-image-crop-picker';
 import LottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const AddProperty = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState();
-
   // React Native Modal
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -199,12 +196,15 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('front');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
-                  <Icons name="image-outline" size={25} color="#777" />
-                </View>
-                <View>
-                  <Text style={[styles.imgBoxLabel]}>Click here to </Text>
+                <View style={{flex: 1}}>
+                  <Text style={[styles.imgBoxLabel]}>
+                    Click on the icon to{' '}
+                  </Text>
                   <Text style={[styles.imgBoxLabel]}>Upload Front Image</Text>
+                </View>
+
+                <View style={styles.imgIconBox}>
+                  <Icons name="cloud-upload-outline" size={25} color="#777" />
                 </View>
               </Pressable>
             </>
@@ -215,20 +215,10 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('front');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
-                  <Image
-                    source={{uri: frontImagePath}}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      borderRadius: 5,
-                    }}
-                  />
-                </View>
                 <Text style={[styles.imgBoxLabel, {flex: 1}]}>
                   Front Image Uploaded
                 </Text>
-                <Icons name="checkbox-outline" size={25} color="green" />
+                <Icons name="checkmark-done-outline" size={25} color="green" />
               </Pressable>
             </>
           )}
@@ -242,12 +232,12 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('left');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
-                  <Icons name="image-outline" size={25} color="#777" />
-                </View>
-                <View>
+                <View style={{flex: 1}}>
                   <Text style={styles.imgBoxLabel}>Click here to </Text>
                   <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
+                </View>
+                <View style={styles.imgIconBox}>
+                  <Icons name="cloud-upload-outline" size={25} color="#777" />
                 </View>
               </Pressable>
             </>
@@ -258,7 +248,7 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('left');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
+                {/* <View style={styles.imgIconBox}>
                   <Image
                     source={{uri: leftImagePath}}
                     style={{
@@ -267,11 +257,11 @@ const AddProperty = ({navigation}) => {
                       borderRadius: 5,
                     }}
                   />
-                </View>
+                </View> */}
                 <Text style={[styles.imgBoxLabel, {flex: 1}]}>
                   Left Image Uploaded
                 </Text>
-                <Icons name="checkbox-outline" size={25} color="green" />
+                <Icons name="checkmark-done-outline" size={25} color="green" />
               </Pressable>
             </>
           )}
@@ -285,12 +275,12 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('right');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
-                  <Icons name="image-outline" size={25} color="#777" />
-                </View>
-                <View>
+                <View style={{flex: 1}}>
                   <Text style={styles.imgBoxLabel}>Click here to </Text>
                   <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
+                </View>
+                <View style={styles.imgIconBox}>
+                  <Icons name="cloud-upload-outline" size={25} color="#777" />
                 </View>
               </Pressable>
             </>
@@ -301,7 +291,7 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('right');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
+                {/* <View style={styles.imgIconBox}>
                   <Image
                     source={{uri: rightImagePath}}
                     style={{
@@ -310,11 +300,11 @@ const AddProperty = ({navigation}) => {
                       borderRadius: 5,
                     }}
                   />
-                </View>
+                </View> */}
                 <Text style={[styles.imgBoxLabel, {flex: 1}]}>
                   Right Image Uploaded
                 </Text>
-                <Icons name="checkbox-outline" size={25} color="green" />
+                <Icons name="checkmark-done-outline" size={25} color="green" />
               </Pressable>
             </>
           )}
@@ -328,12 +318,12 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('opposite');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
-                  <Icons name="image-outline" size={25} color="#777" />
-                </View>
-                <View>
+                <View style={{flex: 1}}>
                   <Text style={styles.imgBoxLabel}>Click here to </Text>
                   <Text style={styles.imgBoxLabel}>Upload Front Image</Text>
+                </View>
+                <View style={styles.imgIconBox}>
+                  <Icons name="cloud-upload-outline" size={25} color="#777" />
                 </View>
               </Pressable>
             </>
@@ -344,7 +334,7 @@ const AddProperty = ({navigation}) => {
                   requestGalleryPermission('opposite');
                 }}
                 style={styles.imgUploadContainer}>
-                <View style={styles.imgIconBox}>
+                {/* <View style={styles.imgIconBox}>
                   <Image
                     source={{uri: oppositeImagePath}}
                     style={{
@@ -353,18 +343,18 @@ const AddProperty = ({navigation}) => {
                       borderRadius: 5,
                     }}
                   />
-                </View>
+                </View> */}
                 <Text style={[styles.imgBoxLabel, {flex: 1}]}>
                   Opposite Side Image Uploaded
                 </Text>
-                <Icons name="checkbox-outline" size={25} color="green" />
+                <Icons name="checkmark-done-outline" size={25} color="green" />
               </Pressable>
             </>
           )}
           {/* ========== Opp Image upload Section ========== */}
 
           {/* ========== Owner Name ========== */}
-          <View style={styles.formGroup}>
+          <View style={[styles.formGroup, {marginTop: 30}]}>
             <Text style={styles.label}>Owner Name</Text>
             <TextInput
               placeholder=""
