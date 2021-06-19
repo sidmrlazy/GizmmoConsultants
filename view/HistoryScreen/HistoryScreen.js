@@ -328,7 +328,15 @@ const HistoryScreen = () => {
                   )}
                 />
               ) : (
-                <Text>No data Found!</Text>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingVertical: '50%',
+                    paddingHorizontal: '50%',
+                  }}>
+                  <Text style={styles.response}>No Data Found!</Text>
+                </View>
               )}
             </>
           )}
