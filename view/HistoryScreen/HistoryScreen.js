@@ -54,6 +54,14 @@ const HistoryScreen = () => {
       label: 'Documentation Complete',
       value: 'Documentation Complete',
     },
+    {
+      label: 'LOI Issued',
+      value: 'LOI Issued',
+    },
+    {
+      label: 'Brokerage Collected',
+      value: 'Brokerage Collected',
+    },
   ]);
 
   const api =

@@ -55,6 +55,7 @@ const AddProperty = ({navigation}) => {
   const [long, setLong] = useState('');
   const [brokerName, setBrokerName] = useState('');
   const [brokerContact, setBrokerContact] = useState('');
+  const [brokerage, setBrokerage] = useState('');
 
   const uploadPropertyApi =
     'https://gizmmoalchemy.com/api/consultancy/consultancy_property.php';
@@ -83,6 +84,7 @@ const AddProperty = ({navigation}) => {
     data.append('longitude', long);
     data.append('broker_name', brokerName);
     data.append('broker_contact_name', brokerContact);
+    data.append('brokerage_months', brokerage);
     // console.log(data);
     // return;
     fetch(
@@ -540,6 +542,19 @@ const AddProperty = ({navigation}) => {
             />
           </View>
           {/* ========== Broker Contact ========== */}
+
+          {/* ========== Brokerage Months ========== */}
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Brokerage Months</Text>
+            <TextInput
+              placeholder="in months"
+              style={styles.input}
+              keyboardType="number-pad"
+              value={brokerage}
+              onChangeText={setBrokerage}
+            />
+          </View>
+          {/* ========== Brokerage Months ========== */}
 
           {/* ========== Upload Button ========== */}
           <Pressable onPress={uploadProperty} style={styles.uploadBtn}>
