@@ -11,6 +11,7 @@ import {
   FlatList,
   ActivityIndicator,
   LogBox,
+  Linking,
 } from 'react-native';
 
 // ========== Libraries ========== //
@@ -154,6 +155,29 @@ const HistoryScreen = () => {
       .finally(() => setLoading(false));
   };
 
+  const requestCallPermission = async customer_number => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+        {
+          title: 'Gizmmo Consultants Call Permission',
+          message: 'Gizmmo Consultants needs access to your Dialer ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        let number = 'tel:${' + customer_number + '}';
+        Linking.openURL(number);
+      } else {
+        console.log('Dialer permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   useEffect(() => {
     getDetails();
     LogBox.ignoreLogs(['Warning: ...']);
@@ -230,7 +254,12 @@ const HistoryScreen = () => {
                               Negotiated
                             </Text>
                           </View>
-                          <Icons name="call" size={20} color="green" />
+                          <Pressable
+                            onPress={() =>
+                              requestCallPermission(item.owner_contact_number)
+                            }>
+                            <Icons name="call" size={20} color="green" />
+                          </Pressable>
                         </View>
 
                         <Text style={styles.cardSection}>Property Details</Text>
