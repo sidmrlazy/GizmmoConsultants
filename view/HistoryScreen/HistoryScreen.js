@@ -62,6 +62,14 @@ const HistoryScreen = () => {
       label: 'Documentation Complete',
       value: 'Documentation Complete',
     },
+    {
+      label: 'LOI Issued',
+      value: 'LOI Issued',
+    },
+    {
+      label: 'Brokerage Collected',
+      value: 'Brokerage Collected',
+    },
   ]);
 
   const api =
@@ -111,7 +119,7 @@ const HistoryScreen = () => {
     })
       .then(response => response.json())
       .then(json => {
-        alert(json.msg);
+        alert('Successful:' + ' ' + 'Status of the property has been changed');
         getDetails();
       })
       .catch(error => {
