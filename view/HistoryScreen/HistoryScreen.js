@@ -332,8 +332,8 @@ const HistoryScreen = () => {
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    paddingVertical: '50%',
-                    paddingHorizontal: '50%',
+                    paddingVertical: '25%',
+                    paddingHorizontal: '30%',
                   }}>
                   <Text style={styles.response}>No Data Found!</Text>
                 </View>
