@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   LogBox,
   Linking,
+  PermissionsAndroid,
 } from 'react-native';
 
 // ========== Libraries ========== //
