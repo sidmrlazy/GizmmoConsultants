@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TextInput, Pressable, StyleSheet} from 'react-native';
 
 // ========== Libraries ========== //
 import Icons from 'react-native-vector-icons/Ionicons';
@@ -20,56 +13,54 @@ const Login = () => {
 
   return (
     <>
-      <ScrollView style={{backgroundColor: '#fff'}}>
-        <View style={styles.topContainer}>
-          <View style={styles.lottieBox}>
-            <LottieView
-              source={require('../assets/json/gpsMarker.json')}
-              autoPlay
-              loop
-              style={styles.lottieJson}
+      <View style={styles.topContainer}>
+        <View style={styles.lottieBox}>
+          <LottieView
+            source={require('../assets/json/gpsMarker.json')}
+            autoPlay
+            loop
+            style={styles.lottieJson}
+          />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.heading}>Login</Text>
+
+          <Text style={styles.label}>Enter Mobile Number</Text>
+          <View style={styles.formRow}>
+            <Icons name="phone-portrait-outline" size={20} color="#03045E" />
+            <TextInput
+              placeholder="XXXXXXXXXX"
+              keyboardType="phone-pad"
+              style={styles.formTxtInput}
+              onChangeText={setUsername}
+              value={user_mobile}
             />
           </View>
-          <View style={styles.container}>
-            <Text style={styles.heading}>Login</Text>
 
-            <Text style={styles.label}>Enter Mobile Number</Text>
-            <View style={styles.formRow}>
-              <Icons name="phone-portrait-outline" size={20} color="#03045E" />
-              <TextInput
-                placeholder="XXXXXXXXXX"
-                keyboardType="phone-pad"
-                style={styles.formTxtInput}
-                onChangeText={setUsername}
-                value={user_mobile}
-              />
-            </View>
-
-            <Text style={styles.label}>Enter Password</Text>
-            <View style={styles.formRow}>
-              <Icons name="lock-closed-outline" size={20} color="#03045E" />
-              <TextInput
-                placeholder="Password"
-                style={styles.formTxtInput}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={user_password}
-              />
-            </View>
-
-            <Pressable
-              onPress={() => {
-                signIn({
-                  user_mobile,
-                  user_password,
-                });
-              }}
-              style={styles.loginBtn}>
-              <Text style={styles.loginBtnTxt}>LOGIN</Text>
-            </Pressable>
+          <Text style={styles.label}>Enter Password</Text>
+          <View style={styles.formRow}>
+            <Icons name="lock-closed-outline" size={20} color="#03045E" />
+            <TextInput
+              placeholder="Password"
+              style={styles.formTxtInput}
+              secureTextEntry={true}
+              onChangeText={setPassword}
+              value={user_password}
+            />
           </View>
+
+          <Pressable
+            onPress={() => {
+              signIn({
+                user_mobile,
+                user_password,
+              });
+            }}
+            style={styles.loginBtn}>
+            <Text style={styles.loginBtnTxt}>LOGIN</Text>
+          </Pressable>
         </View>
-      </ScrollView>
+      </View>
     </>
   );
 };

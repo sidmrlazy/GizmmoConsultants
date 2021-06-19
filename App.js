@@ -70,7 +70,7 @@ const App = () => {
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
-        const {user_mobile, user_password, user_id} = data;
+        const {user_mobile, user_password} = data;
 
         if (!user_mobile) {
           alert('Please Enter Mobile Number!');
@@ -89,7 +89,6 @@ const App = () => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              user_id: user_id,
               user_mobile: user_mobile,
               user_password: user_password,
             }),
@@ -104,7 +103,6 @@ const App = () => {
             if (result.error == 0) {
               AsyncStorage.setItem('user_id', result.user_id);
               AsyncStorage.setItem('user_name', result.user_name);
-              AsyncStorage.setItem('user_password', result.user_password);
               AsyncStorage.setItem('user_mobile', result.user_mobile);
               dispatch({type: 'SIGN_IN', token: 'userToken'});
               AsyncStorage.setItem('userToken', '1');
