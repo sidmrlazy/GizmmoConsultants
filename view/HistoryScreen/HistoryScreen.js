@@ -99,9 +99,11 @@ const HistoryScreen = () => {
 
           <View style={styles.responseSection}>
             <View style={styles.card}>
+              <Text style={styles.cardSection}>Owner Details</Text>
               <View style={styles.headingRow}>
                 <View style={{flex: 1}}>
                   <Text style={styles.ownerName}>Owner Name</Text>
+
                   <Text style={styles.ownerContact}>9876543210</Text>
                   <Text style={styles.city}>Lucknow</Text>
                   <Text style={styles.pincode}>226024</Text>
@@ -372,6 +374,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#c7c7c7c7',
     fontFamily: 'OpenSans-Regular',
     fontSize: 16,
+    flex: 1,
   },
   responseSection: {
     width: '100%',
@@ -409,6 +412,7 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Bold',
     fontSize: 24,
     color: '#0077B6',
+    flex: 1,
   },
   ownerContact: {
     fontFamily: 'OpenSans-Regular',
