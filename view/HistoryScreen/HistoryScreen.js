@@ -72,6 +72,18 @@ const HistoryScreen = () => {
       label: 'Brokerage Collected',
       value: 'Brokerage Collected',
     },
+    {
+      label: 'On Hold',
+      value: 'On Hold',
+    },
+    {
+      label: 'Official team not visited',
+      value: 'Official team not visited',
+    },
+    {
+      label: 'Not Uploaded',
+      value: 'Not Uploaded',
+    },
   ]);
 
   const api =
