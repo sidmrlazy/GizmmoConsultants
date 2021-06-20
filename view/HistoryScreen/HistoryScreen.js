@@ -303,7 +303,10 @@ const HistoryScreen = () => {
                             <Text style={styles.label}>
                               Monthly Asking Price
                             </Text>
-                            <Text style={styles.response}>Rs {item.price}</Text>
+
+                            <Text style={styles.response}>
+                              Rs {item.monthly}
+                            </Text>
                           </View>
                         </View>
 
@@ -373,7 +376,9 @@ const HistoryScreen = () => {
                     paddingVertical: '25%',
                     paddingHorizontal: '30%',
                   }}>
-                  <Text style={styles.response}>No Data Found!</Text>
+                  <Text style={styles.response}>
+                    No properties added by you!
+                  </Text>
                 </View>
               )}
             </>
@@ -395,7 +400,10 @@ const HistoryScreen = () => {
               <Icons name="close-circle-outline" size={30} color="#fff" />
             </Pressable>
           </View>
-          <ScrollView horizontal={true}>
+          <ScrollView
+            minimumZoomScale={1}
+            maximumZoomScale={5}
+            horizontal={true}>
             <View style={styles.imgContainer}>
               <Image source={{uri: frontImage}} style={styles.modalImg} />
             </View>
