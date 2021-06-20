@@ -60,6 +60,7 @@ const SettingsScreen = () => {
               fontFamily: 'OpenSans-ExtraBold',
               fontSize: 30,
               color: '#0077B6',
+              textAligan: 'center',
             }}>
             {name}
           </Text>
