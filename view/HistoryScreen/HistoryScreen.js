@@ -13,6 +13,7 @@ import {
   LogBox,
   Linking,
   PermissionsAndroid,
+  RefreshControl,
 } from 'react-native';
 
 // ========== Libraries ========== //
@@ -28,7 +29,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import demo3 from '../../assets/images/demo/demo-three.jpg';
 // import demo4 from '../../assets/images/demo/demo-four.jpg';
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 const HistoryScreen = () => {
+  const [refreshing, setRefreshing] = React.useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(true);
@@ -179,6 +185,12 @@ const HistoryScreen = () => {
     }
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getDetails();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   useEffect(() => {
     getDetails();
     LogBox.ignoreLogs(['Warning: ...']);
@@ -187,7 +199,11 @@ const HistoryScreen = () => {
 
   return (
     <>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.container}>
           <View style={styles.headerSection}>
             <TextInput

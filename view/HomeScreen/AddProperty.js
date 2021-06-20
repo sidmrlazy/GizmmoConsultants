@@ -106,11 +106,9 @@ const AddProperty = ({navigation}) => {
         return response.json();
       })
       .then(function (result) {
-        if (result.error == 1) {
-          alert(result.msg);
+        alert(result.msg);
+        if (result.error == 0) {
           navigation.navigate('HomeScreen');
-        } else {
-          alert(result.msg);
         }
       })
       .catch(error => {
@@ -576,6 +574,7 @@ const AddProperty = ({navigation}) => {
           {/* ========== Upload Button ========== */}
         </View>
       </ScrollView>
+
       <Modal
         animationType="fade"
         transparent={true}
