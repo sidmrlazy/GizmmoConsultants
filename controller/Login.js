@@ -17,6 +17,7 @@ const Login = () => {
   const [user_mobile, setUsername] = React.useState('');
   const [user_password, setPassword] = React.useState('');
   const {signIn} = React.useContext(AuthContext);
+  const [isSecureEntry, setIsSecureEntry] = React.useState(true);
 
   return (
     <>
@@ -33,28 +34,55 @@ const Login = () => {
           <View style={styles.container}>
             <Text style={styles.heading}>Login</Text>
 
-            <Text style={styles.label}>Enter Mobile Number</Text>
+            <Text style={styles.label}>Mobile Number</Text>
             <View style={styles.formRow}>
               <Icons name="phone-portrait-outline" size={20} color="#03045E" />
               <TextInput
-                placeholder="XXXXXXXXXX"
+                placeholder=""
                 keyboardType="phone-pad"
                 style={styles.formTxtInput}
                 onChangeText={setUsername}
                 value={user_mobile}
+                autoFocus={true}
               />
             </View>
 
-            <Text style={styles.label}>Enter Password</Text>
+            <Text style={styles.label}>Password</Text>
             <View style={styles.formRow}>
               <Icons name="lock-closed-outline" size={20} color="#03045E" />
               <TextInput
-                placeholder="Password"
+                placeholder=""
                 style={styles.formTxtInput}
-                secureTextEntry={true}
+                secureTextEntry={isSecureEntry}
                 onChangeText={setPassword}
                 value={user_password}
+                onSubmitEditing={() => {
+                  signIn({
+                    user_mobile,
+                    user_password,
+                  });
+                }}
               />
+              <Pressable
+                onPress={() => {
+                  setIsSecureEntry(prev => !prev);
+                }}>
+                {isSecureEntry ? (
+                  <Icons
+                    name="eye-off-outline"
+                    size={25}
+                    color="#03045E"
+                    style={{marginRight: 10}}
+                  />
+                ) : (
+                  <Icons
+                    name="eye-outline"
+                    size={25}
+                    color="#03045E"
+                    style={{marginRight: 10}}
+                  />
+                )}
+              </Pressable>
             </View>
 
             <Pressable
@@ -96,23 +124,28 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     color: '#000',
     marginTop: 30,
+    fontSize: 16,
   },
   formRow: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 10,
+    borderWidth: 1.5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    borderColor: '#03045E',
+    paddingVertical: 5,
   },
   formTxtInput: {
     fontFamily: 'OpenSans-Regular',
     color: '#000',
     marginLeft: 10,
     flex: 1,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#c7c7c7c7',
+    fontSize: 16,
   },
   loginBtn: {
-    marginTop: 50,
+    marginTop: 30,
     marginBottom: 30,
     width: '100%',
     justifyContent: 'center',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, ToastAndroid} from 'react-native';
 
 // ========== Libraries ========== //
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,6 +16,16 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [isLoading, setLoading] = React.useState();
+
+  function showToast(msg) {
+    ToastAndroid.showWithGravityAndOffset(
+      msg,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+  }
 
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -73,11 +83,11 @@ const App = () => {
         const {user_mobile, user_password} = data;
 
         if (!user_mobile) {
-          alert('Please Enter Mobile Number!');
+          showToast('Please enter your authorized mobile number');
           return;
         }
         if (!user_password) {
-          alert('Please Enter Password!');
+          showToast('Password is incorrect');
           return;
         }
         fetch(
@@ -107,7 +117,7 @@ const App = () => {
               dispatch({type: 'SIGN_IN', token: 'userToken'});
               AsyncStorage.setItem('userToken', '1');
             } else {
-              alert('Gizmmo Consultants: ', result.msg);
+              showToast('We could not find this user in our system');
             }
           })
           .catch(error => {

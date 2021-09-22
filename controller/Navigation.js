@@ -36,7 +36,7 @@ const Navigation = ({navigation}) => {
             ),
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="HistoryScreen"
           component={HistoryScreen}
           options={{
@@ -46,7 +46,7 @@ const Navigation = ({navigation}) => {
               <Icons name="bookmark-outline" color={color} size={20} />
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="SettingsScreen"
           component={SettingsScreen}
@@ -54,7 +54,7 @@ const Navigation = ({navigation}) => {
             tabBarLabel: 'Settings',
             tabBarColor: '#CAF0F8',
             tabBarIcon: ({color}) => (
-              <Icons name="settings-outline" color={color} size={20} />
+              <Icons name="construct-outline" color={color} size={20} />
             ),
           }}
         />
