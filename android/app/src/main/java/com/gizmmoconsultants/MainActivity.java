@@ -1,4 +1,4 @@
-package com.gizmmoconsultants;
+package com.gaconsultants;
 
 import com.facebook.react.ReactActivity;
 

@@ -131,13 +131,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.gizmmoconsultants"
+        applicationId "com.gaconsultants"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
-        targetSdkVersion 27
+        targetSdkVersion 30
     }
     splits {
         abi {
@@ -173,6 +173,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
             
         }
     }
