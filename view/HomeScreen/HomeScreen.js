@@ -379,25 +379,20 @@ const HomeScreen = ({navigation}) => {
                       <>
                         <View style={styles.flatListContainer}>
                           {item.front_image !== '' ? (
-                            <View
-                              style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: 150,
-                                height: 150,
-                                marginRight: 5,
-                              }}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setFrontImage(item.front_image);
+                                setRightImage(item.right_image);
+                                setLeftImage(item.left_image);
+                                setOppositeImage(item.opposite_image);
+                                setModalVisible(true);
+                              }}
+                              style={styles.firstImgCont}>
                               <Image
                                 source={{uri: item.front_image}}
-                                style={{
-                                  width: 150,
-                                  height: 150,
-                                  borderRadius: 5,
-                                  resizeMode: 'contain',
-                                }}
+                                style={styles.imgFirst}
                               />
-                            </View>
+                            </TouchableOpacity>
                           ) : null}
 
                           <View style={{flex: 2, marginLeft: 20}}>
@@ -446,32 +441,64 @@ const HomeScreen = ({navigation}) => {
 
                             <List.Accordion
                               title="Property Details"
-                              left={() => <Icons name="folder-open-outline" />}
-                              right={() => (
-                                <Icons name="chevron-down-outline" />
-                              )}>
+                              left={() => (
+                                <Icons
+                                  name="folder-open"
+                                  size={15}
+                                  color="#6c3a9e"
+                                />
+                              )}
+                              right={() => <Icons name="chevron-down" />}>
                               <List.Item
                                 title="Front"
-                                description={item.frontage}
-                              />
-                              <List.Item
-                                title="Carpet Area"
                                 description={item.frontage + ' ft'}
+                                left={() => (
+                                  <Icons
+                                    name="business-outline"
+                                    size={25}
+                                    color="#6c3a9e"
+                                  />
+                                )}
+                                descriptionStyle={styles.accDesc}
                               />
 
                               <List.Item
                                 title="Carpet Area"
                                 description={item.carpet_area + ' sqft'}
+                                left={() => (
+                                  <Icons
+                                    name="layers-outline"
+                                    size={25}
+                                    color="#6c3a9e"
+                                  />
+                                )}
+                                descriptionStyle={styles.accDesc}
                               />
 
                               <List.Item
                                 title="Floor"
                                 description={item.floor}
+                                left={() => (
+                                  <Icons
+                                    name="file-tray-stacked-outline"
+                                    size={25}
+                                    color="#6c3a9e"
+                                  />
+                                )}
+                                descriptionStyle={styles.accDesc}
                               />
 
                               <List.Item
                                 title="Rent per sqft"
                                 description={'₹' + item.price}
+                                left={() => (
+                                  <Icons
+                                    name="cafe-outline"
+                                    size={25}
+                                    color="#6c3a9e"
+                                  />
+                                )}
+                                descriptionStyle={styles.accDesc}
                               />
 
                               <List.Item
@@ -479,16 +506,41 @@ const HomeScreen = ({navigation}) => {
                                 description={
                                   '₹' + item.price * item.carpet_area
                                 }
+                                left={() => (
+                                  <Icons
+                                    name="wallet-outline"
+                                    size={25}
+                                    color="#6c3a9e"
+                                  />
+                                )}
+                                descriptionStyle={styles.accDesc}
                               />
 
                               <List.Item
                                 title="Upload Date"
                                 description={item.created_date}
+                                left={() => (
+                                  <Icons
+                                    name="cloud-upload-outline"
+                                    size={25}
+                                    color="#6c3a9e"
+                                  />
+                                )}
+                                descriptionStyle={styles.accDesc}
                               />
+
                               {item.broker_name !== '' ? (
                                 <List.Item
                                   title="Broker Name"
                                   description={item.broker_name}
+                                  left={() => (
+                                    <Icons
+                                      name="pie-chart-outline"
+                                      size={25}
+                                      color="#6c3a9e"
+                                    />
+                                  )}
+                                  descriptionStyle={styles.accDesc}
                                 />
                               ) : null}
                             </List.Accordion>
@@ -851,5 +903,24 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-SemiBold',
     color: '#fff',
     marginLeft: 3,
+  },
+  accDesc: {
+    fontFamily: 'OpenSans-SemiBold',
+    fontSize: 16,
+    color: '#000',
+  },
+  firstImgCont: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 150,
+    height: 150,
+    marginRight: 5,
+  },
+  imgFirst: {
+    width: 200,
+    height: 200,
+    borderRadius: 5,
+    resizeMode: 'contain',
   },
 });

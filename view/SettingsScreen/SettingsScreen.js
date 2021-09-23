@@ -3,15 +3,16 @@ import {View, Text, StyleSheet, TouchableOpacity, Share} from 'react-native';
 
 // ========== Libraries ========== //
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import {createStackNavigator} from '@react-navigation/stack';
 import {AuthContext} from '../../model/Utils';
 import Icons from 'react-native-vector-icons/Ionicons';
+import VersionInfo from 'react-native-version-info';
 
 const SettingsScreen = () => {
   const {signOut} = React.useContext(AuthContext);
   const [userId, setUserId] = React.useState('');
   const [name, setName] = React.useState('');
   const [mobile, setMobile] = React.useState('');
+  const [appVersion, setAppVersion] = React.useState('');
 
   const userProfileData = async () => {
     setUserId(await AsyncStorage.getItem('user_id'));
@@ -20,9 +21,13 @@ const SettingsScreen = () => {
   };
 
   const onShare = async () => {
+    // const Buffer = require("buffer").Buffer;
+    // let encodedAuth = new Buffer("your text").toString("base64");
     try {
       const result = await Share.share({
-        message: 'https://reactnative.dev/docs/share' + '/' + userId,
+        message:
+          'https://gizmmoalchemy.com/api/consultancy/index.php?userId=' +
+          userId,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -42,7 +47,15 @@ const SettingsScreen = () => {
   const shareContact = async () => {
     try {
       const result = await Share.share({
-        message: name + ',' + ' ' + mobile,
+        message:
+          name +
+          ',' +
+          ' ' +
+          'from Gizmmo Consultants.' +
+          ' ' +
+          'Save my contact number' +
+          ' ' +
+          mobile,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -60,6 +73,7 @@ const SettingsScreen = () => {
   };
 
   React.useEffect(() => {
+    setAppVersion(VersionInfo.appVersion);
     userProfileData();
   }, []);
   return (
@@ -71,14 +85,19 @@ const SettingsScreen = () => {
         </View>
 
         <TouchableOpacity onPress={onShare} style={styles.tab}>
-          <Icons name="document-attach-outline" size={25} color="#6c3a9e" />
-          <Text style={styles.tabTxt}>Share Property Detail Form</Text>
+          <Icons name="paper-plane-outline" size={25} color="#6c3a9e" />
+          <Text style={styles.tabTxt}>Send Property Detail Form</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={shareContact} style={styles.tab}>
           <Icons name="megaphone-outline" size={25} color="#6c3a9e" />
-          <Text style={styles.tabTxt}>Share E-Card</Text>
+          <Text style={styles.tabTxt}>Share your information</Text>
         </TouchableOpacity>
+
+        <View onPress={shareContact} style={styles.tab}>
+          <Icons name="logo-google-playstore" size={25} color="#6c3a9e" />
+          <Text style={styles.tabTxt}>App Version ({appVersion})</Text>
+        </View>
 
         <TouchableOpacity onPress={signOut} style={styles.tab}>
           <Icons name="log-out-outline" size={25} color="#6c3a9e" />
@@ -126,7 +145,7 @@ const styles = StyleSheet.create({
   },
   tabTxt: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 22,
+    fontSize: 20,
     flex: 1,
     marginLeft: 20,
   },
